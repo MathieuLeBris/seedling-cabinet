@@ -1,0 +1,8 @@
+id;name;manufacturer;reference;supplier;url;quantity;unit_price;status;pin_assignment_required;interface;notes
+CTRL-01;Carte contrôleur;Espressif;WT32-SC01 Plus;;;;1;;À étudier;true;GPIO / I²C;Contrôleur principal et écran tactile
+SEN-01;Capteur température / humidité;Sensirion;SHT31;;;;1;;À étudier;true;I²C;Mesure environnementale
+SEN-02;Capteur CO2;Sensirion;SCD41;;;;1;;À étudier;true;I²C;Mesure concentration CO2
+SEN-03;Sonde température;Analog Devices;DS18B20;;;;1;;À étudier;true;1-Wire;Mesure température substrat
+ACT-01;Chauffage soufflant;À définir;Équipement existant;;;;1;;Installé;true;Relais;Chauffage de l'armoire
+ACT-02;Tapis chauffant;À définir;Équipement existant;;;;1;;Installé;true;Relais;Chauffage du substrat
+PWR-01;Alimentation basse tension;À définir;À définir;;;;1;;À étudier;false;DC;Alimentation électronique
