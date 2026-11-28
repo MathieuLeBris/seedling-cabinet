@@ -26,13 +26,13 @@ Elle recense les composants nécessaires au projet, leurs références commercia
 <!-- BOM:START -->
 | ID | Composant | Fabricant | Référence | Quantité | Statut |
 | --- | --- | --- | --- | --- | --- |
-| CTRL-01 | Carte contrôleur | Espressif | WT32-SC01 Plus |  |  |
-| SEN-01 | Capteur température / humidité | Sensirion | SHT31 |  |  |
-| SEN-02 | Capteur CO2 | Sensirion | SCD41 |  |  |
-| SEN-03 | Sonde température | Analog Devices | DS18B20 |  |  |
-| ACT-01 | Chauffage soufflant | À définir | Équipement existant |  |  |
-| ACT-02 | Tapis chauffant | À définir | Équipement existant |  |  |
-| PWR-01 | Alimentation basse tension | À définir | À définir |  |  |
+| CTRL-01 | Carte contrôleur | Espressif | WT32-SC01 Plus | 1 | À étudier |
+| SEN-01 | Capteur température / humidité | Sensirion | SHT31 | 1 | À étudier |
+| SEN-02 | Capteur CO2 | Sensirion | SCD41 | 1 | À étudier |
+| SEN-03 | Sonde température | Analog Devices | DS18B20 | 1 | À étudier |
+| ACT-01 | Chauffage soufflant | À définir | Équipement existant | 1 | Installé |
+| ACT-02 | Tapis chauffant | À définir | Équipement existant | 1 | Installé |
+| PWR-01 | Alimentation basse tension | À définir | À définir | 1 | À étudier |
 <!-- BOM:END -->
 
 ## 3. Architecture matérielle
@@ -94,13 +94,13 @@ Ce tableau est généré automatiquement à partir de `hardware/bom/components.c
 <!-- INTERFACES:START -->
 | Composant | Interface | Fonction | Affectation des broches |
 | --- | --- | --- | --- |
-| Carte contrôleur | true | GPIO / I²C | Non |
-| Capteur température / humidité | true | I²C | Non |
-| Capteur CO2 | true | I²C | Non |
-| Sonde température | true | 1-Wire | Non |
-| Chauffage soufflant | true | Relais | Non |
-| Tapis chauffant | true | Relais | Non |
-| Alimentation basse tension | false | DC | Non |
+| Carte contrôleur | GPIO / I²C | Contrôleur principal et écran tactile | Oui |
+| Capteur température / humidité | I²C | Mesure environnementale | Oui |
+| Capteur CO2 | I²C | Mesure concentration CO2 | Oui |
+| Sonde température | 1-Wire | Mesure température substrat | Oui |
+| Chauffage soufflant | Relais | Chauffage de l'armoire | Oui |
+| Tapis chauffant | Relais | Chauffage du substrat | Oui |
+| Alimentation basse tension | DC | Alimentation électronique | Non |
 <!-- INTERFACES:END -->
 
 Les principales interfaces envisagées sont :
@@ -131,6 +131,12 @@ Le tableau ci-dessous est généré automatiquement à partir de ce fichier.
 <!-- PINS:START -->
 | ID composant | Composant | Signal | GPIO | Interface | Direction | Statut | Remarques |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| CTRL-01 | Carte contrôleur | À définir | À définir | À définir | À définir | À définir | À définir |
+| SEN-01 | Capteur température / humidité | À définir | À définir | À définir | À définir | À définir | À définir |
+| SEN-02 | Capteur CO2 | À définir | À définir | À définir | À définir | À définir | À définir |
+| SEN-03 | Sonde température | À définir | À définir | À définir | À définir | À définir | À définir |
+| ACT-01 | Chauffage soufflant | À définir | À définir | À définir | À définir | À définir | À définir |
+| ACT-02 | Tapis chauffant | À définir | À définir | À définir | À définir | À définir | À définir |
 <!-- PINS:END -->
 
 ### 5.1. Règles d'affectation

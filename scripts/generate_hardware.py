@@ -120,6 +120,13 @@ def load_components():
         )
 
     check_columns(COMPONENTS_FILE, COMPONENT_COLUMNS)
+    with COMPONENTS_FILE.open("r", encoding="utf-8-sig", newline="") as file:
+        reader = csv.reader(file, delimiter=CSV_DELIMITER)
+
+        for row in reader:
+            print("Nombre de colonnes :", len(row))
+            print(row)
+
     components = read_csv(COMPONENTS_FILE)
 
     ids = [row["id"].strip() for row in components]
@@ -130,6 +137,17 @@ def load_components():
     if len(ids) != len(set(ids)):
         raise ValueError("Des identifiants de composants sont en double.")
 
+        print("\n--- DIAGNOSTIC COMPONENTS ---")
+    print("Colonnes :", list(components[0].keys()) if components else "Aucun composant")
+
+    for component in components:
+        print(
+            repr(component.get("id")),
+            repr(component.get("pin_assignment_required")),
+            is_true(component.get("pin_assignment_required"))
+        )
+    print("--- FIN DIAGNOSTIC ---\n")
+
     return components
 
 
@@ -137,74 +155,62 @@ def load_components():
 # 2. SYNCHRONISATION DES AFFECTATIONS DE BROCHES
 # ============================================================
 
+
+
 def synchronize_pins(components):
+    """
+    Ajoute une ligne dans pin_assignments.csv pour chaque composant
+    nécessitant une affectation et qui n'y figure pas encore.
+
+    Les lignes existantes ne sont jamais modifiées.
+    """
+
     if not PINS_FILE.exists():
         write_csv(PINS_FILE, PIN_COLUMNS, [])
 
     check_columns(PINS_FILE, PIN_COLUMNS)
+
     pins = read_csv(PINS_FILE)
 
-    existing_ids = {
-        row["component_id"].strip()
-        for row in pins
-        if row["component_id"].strip()
-    }
+    # Récupération des identifiants déjà présents
+    existing_ids = set()
+
+    for pin in pins:
+        component_id = (pin.get("component_id") or "").strip()
+        if component_id:
+            existing_ids.add(component_id)
 
     added = 0
 
     for component in components:
-        component_id = component["id"].strip()
+        component_id = (component.get("id") or "").strip()
 
-        if not is_true(component["pin_assignment_required"]):
+        if not is_true(component.get("pin_assignment_required")):
             continue
 
-        if component_id not in existing_ids:
-            pins.append({
-                "component_id": component_id,
-                "component_name": component["name"],
-                "signal": "À définir",
-                "gpio": "À définir",
-                "interface": component["interface"],
-                "direction": "À définir",
-                "status": "À définir",
-                "notes": "Ligne initiale à compléter",
-            })
+        if not component_id or component_id in existing_ids:
+            continue
 
-            existing_ids.add(component_id)
-            added += 1
+        pins.append({
+            "component_id": component_id,
+            "component_name": (component.get("name") or "").strip(),
+            "signal": "À définir",
+            "gpio": "À définir",
+            "interface": "À définir",
+            "direction": "À définir",
+            "status": "À définir",
+            "notes": "À définir",
+        })
 
-    # Complète les noms manquants sans modifier les affectations
-    names = {
-        row["id"].strip(): row["name"].strip()
-        for row in components
-    }
-
-    for pin in pins:
-        component_id = pin["component_id"].strip()
-
-        if not pin["component_name"].strip():
-            pin["component_name"] = names.get(component_id, "")
+        existing_ids.add(component_id)
+        added += 1
 
     write_csv(PINS_FILE, PIN_COLUMNS, pins)
-
-    # Détecte les affectations devenues orphelines
-    component_ids = set(names.keys())
-
-    orphan_ids = sorted({
-        pin["component_id"].strip()
-        for pin in pins
-        if pin["component_id"].strip() not in component_ids
-    })
-
-    if orphan_ids:
-        print(
-            "Attention : affectations sans composant correspondant : "
-            + ", ".join(orphan_ids)
-        )
 
     print(f"{added} composant(s) ajouté(s) dans pin_assignments.csv.")
 
     return pins
+
 
 
 # ============================================================
